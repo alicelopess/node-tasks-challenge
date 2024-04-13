@@ -2,10 +2,29 @@ import http from 'node:http'
 import { routes } from './routes/routes.js'
 
 //TODO: Create Server
-const server = http.createServer((request, response) => {
+const server = http.createServer(async (request, response) => {
     //TODO: Get Request Method and URL
     const { method, url } = request
     console.log(`{ method: ${method}, url: ${url} }`) //test
+
+    //TODO: Collect request body using streams and buffers
+    const buffers = []
+    
+    //await all request body reading and push into buffers array
+    for await (const chunk of request) {
+        buffers.push(chunk)
+    }
+
+    console.log(buffers) //test
+    console.log(request.body) //test
+
+    try {
+        request.body = JSON.parse(Buffer.concat(buffers).toString())
+    } catch {
+        request.body = null
+    }
+    
+    console.log(request.body) //test
 
     //TODO: Find route in routes array
     const route = routes.find((route) => route.method == method && route.path == url)
