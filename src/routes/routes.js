@@ -1,7 +1,8 @@
 import { randomUUID } from 'node:crypto'
+import { Database } from '../database/database.js'
 
-//TODO: Create temporary database
-const tasks = []
+//TODO: Create database
+const database = new Database()
 
 //TODO: Create routes array
 export const routes = [
@@ -9,9 +10,11 @@ export const routes = [
         method: 'GET',
         path: '/tasks',
         handler: (request, response) => {
+            const tasks = database.select('tasks')
+
             return response
                 .setHeader('content-type', 'application/json')
-                .end(`Tasks List: ${tasks.length === 0 ? '[]' : JSON.stringify(tasks)}`)
+                .end(`Tasks List: ${JSON.stringify(tasks)}`)
         }
     },
     {
@@ -20,14 +23,16 @@ export const routes = [
         handler: (request, response) => {
             const { title, description } = request.body
 
-            tasks.push({
+            const task = {
                 id: randomUUID(),
                 title,
                 description,
                 completed_at: null,
                 created_at: 'Data de criação',
                 updated_at: 'Data de atualização'
-            })
+            }
+
+            database.insert('tasks', task)
 
             return response
                 .writeHead(201)
