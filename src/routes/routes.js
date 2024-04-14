@@ -13,7 +13,7 @@ export const routes = [
 
             return response
                 .setHeader('content-type', 'application/json')
-                .end(`Tasks List: ${JSON.stringify(tasks)}`)
+                .end(`${JSON.stringify(tasks)}`)
         }
     },
     {
@@ -35,7 +35,7 @@ export const routes = [
 
             return response
                 .writeHead(201)
-                .end('Task Created!')
+                .end(`Task Created! \n id: ${task.id}`)
         }
     },
     {
@@ -46,11 +46,17 @@ export const routes = [
             const { id } = request.params
             console.log(`id: ${id}`)
 
-            database.remove('tasks', id)
+            const reqMessage = database.remove('tasks', id)
 
-            return response
-                .writeHead(204)
-                .end('Task Deleted!')
+            if (reqMessage.length === 0) {
+                return response
+                    .writeHead(404)
+                    .end('Task Not Found!')
+            } else {
+                return response
+                    .writeHead(200)
+                    .end(`Task ${reqMessage[0]}`)
+            }
         }
     },
     {
@@ -63,16 +69,21 @@ export const routes = [
 
             const { title, description } = request.body
 
-            database.update('tasks', id, {
+            const reqMessage = database.update('tasks', id, {
                 title,
                 description,
                 updated_at: new Date()
             })
 
-
-            return response
-                .writeHead(204)
-                .end('Task Updated!')
+            if (reqMessage.length === 0) {
+                return response
+                    .writeHead(404)
+                    .end('Task Not Found!')
+            } else {
+                return response
+                    .writeHead(200)
+                    .end(`Task ${reqMessage[0]}`)
+            }
         }
     },
     {
@@ -83,13 +94,19 @@ export const routes = [
             const { id } = request.params
             console.log(`id: ${id}`)
 
-            database.updateTaskStatus('tasks', id, {
+            const reqMessage = database.updateTaskStatus('tasks', id, {
                 completed_at: new Date()
             })
 
-            return response
-                .writeHead(204)
-                .end('Task Updated!')
+            if (reqMessage.length === 0) {
+                return response
+                    .writeHead(404)
+                    .end('Task Not Found!')
+            } else {
+                return response
+                    .writeHead(200)
+                    .end(`Task ${reqMessage[0]}`)
+            }
         }
     },
 ]

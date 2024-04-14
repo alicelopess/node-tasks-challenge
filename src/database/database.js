@@ -43,6 +43,10 @@ export class Database {
         if (taskIndex > -1) { 
             this.#database[table].splice(taskIndex, 1)
             this.#persistDatabase()
+
+            return ['successfully deleted']
+        } else {
+            return []
         }
     }
     
@@ -53,6 +57,10 @@ export class Database {
             const { completed_at, created_at } = this.#database[table][taskIndex]
             this.#database[table][taskIndex] = { id, completed_at, created_at, ...taskUpdatedData }
             this.#persistDatabase()
+
+            return ['successfully updated']
+        } else {
+            return []
         }
     }
 
@@ -62,7 +70,10 @@ export class Database {
         if (taskIndex > -1) {
             this.#database[table][taskIndex].completed_at ? this.#database[table][taskIndex].completed_at = null : this.#database[table][taskIndex].completed_at = taskUpdatedStatus.completed_at
             this.#persistDatabase()
+
+            return ['successfully updated']
+        } else {
+            return []
         }
     }
-    
 }
