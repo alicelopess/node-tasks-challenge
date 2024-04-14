@@ -54,8 +54,13 @@ export class Database {
         const taskIndex = this.#database[table].findIndex((task) => task.id == id)
 
         if (taskIndex > -1) {
+            const { title, description, updated_at } = taskUpdatedData
+            
+            const updatedTitle = title ? title : this.#database[table][taskIndex].title
+            const updatedDescription = description ? description : this.#database[table][taskIndex].description
+
             const { completed_at, created_at } = this.#database[table][taskIndex]
-            this.#database[table][taskIndex] = { id, completed_at, created_at, ...taskUpdatedData }
+            this.#database[table][taskIndex] = { id, updated_at, title: updatedTitle, description: updatedDescription, completed_at, created_at }
             this.#persistDatabase()
 
             return ['successfully updated']

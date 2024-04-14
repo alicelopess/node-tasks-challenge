@@ -76,20 +76,26 @@ export const routes = [
 
             const { title, description } = request.body
 
-            const reqMessage = database.update('tasks', id, {
-                title,
-                description,
-                updated_at: new Date()
-            })
-
-            if (reqMessage.length === 0) {
+            if (!title && !description) {
                 return response
-                    .writeHead(404)
-                    .end('Task Not Found!')
+                    .writeHead(400)
+                    .end(`Oops! Empty Request Body!`)
             } else {
-                return response
-                    .writeHead(200)
-                    .end(`Task ${reqMessage[0]}`)
+                const reqMessage = database.update('tasks', id, {
+                    title,
+                    description,
+                    updated_at: new Date()
+                })
+    
+                if (reqMessage.length === 0) {
+                    return response
+                        .writeHead(404)
+                        .end('Task Not Found!')
+                } else {
+                    return response
+                        .writeHead(200)
+                        .end(`Task ${reqMessage[0]}`)
+                }
             }
         }
     },
