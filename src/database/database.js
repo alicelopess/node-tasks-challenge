@@ -28,5 +28,15 @@ export class Database {
 
         return data
     }
+    // --Model: { "tasks": [{task}, ...] }
+    //TODO: Create method that remove data from database
+    remove(table, id) {
+        const taskIndex = this.#database[table].findIndex((task) => task.id == id)
+
+        if (taskIndex > -1) {
+            this.#database[table].splice(taskIndex, 1)
+        }
+
+    }
     
 }

@@ -45,11 +45,11 @@ export const routes = [
         path: buildRoutePath('/tasks/:id'),
         handler: (request, response) => {
 
-            //TODO: Get Path ID
+            //TODO: Get Path ID (route param)
             const { id } = request.params
             console.log(`id: ${id}`)
 
-            //database.remove('tasks', id)
+            database.remove('tasks', id)
 
             return response
                 .writeHead(204)
