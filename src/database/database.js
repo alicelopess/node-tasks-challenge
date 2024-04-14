@@ -28,15 +28,24 @@ export class Database {
 
         return data
     }
-    // --Model: { "tasks": [{task}, ...] }
     //TODO: Create method that remove data from database
     remove(table, id) {
         const taskIndex = this.#database[table].findIndex((task) => task.id == id)
-
-        if (taskIndex > -1) {
+        
+        if (taskIndex > -1) { //if task exists
             this.#database[table].splice(taskIndex, 1)
         }
+        
+    }
+    
+    //TODO: Create method that remove data from database
+    update(table, id, taskUpdatedData) {
+        const taskIndex = this.#database[table].findIndex((task) => task.id == id)
 
+        if (taskIndex > -1) { //if task exists
+            const { completed_at, created_at } = this.#database[table][taskIndex]
+            this.#database[table][taskIndex] = { id, completed_at, created_at, ...taskUpdatedData }
+        }
     }
     
 }
