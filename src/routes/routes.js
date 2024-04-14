@@ -22,20 +22,27 @@ export const routes = [
         handler: (request, response) => {
             const { title, description } = request.body
 
-            const task = {
-                id: randomUUID(),
-                title,
-                description,
-                completed_at: null,
-                created_at: new Date(),
-                updated_at: new Date()
+            if (title) {
+                const task = {
+                    id: randomUUID(),
+                    title,
+                    description: description ? description : null,
+                    completed_at: null,
+                    created_at: new Date(),
+                    updated_at: new Date()
+                }
+
+                database.insert('tasks', task)
+
+                return response
+                    .writeHead(201)
+                    .end(`Task Created! \n id: ${task.id}`)
+
+            } else {
+                return response
+                    .writeHead(400)
+                    .end(`Oops! Must add task title!`)
             }
-
-            database.insert('tasks', task)
-
-            return response
-                .writeHead(201)
-                .end(`Task Created! \n id: ${task.id}`)
         }
     },
     {
