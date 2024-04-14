@@ -27,11 +27,21 @@ const server = http.createServer(async (request, response) => {
     console.log(request.body) //test
 
     //TODO: Find route in routes array
-    const route = routes.find((route) => route.method == method && route.path == url)
+    const route = routes.find((route) => route.method == method && route.path.test(url))
     console.log(route) //test
 
     //TODO: Call Route Handler Function
-    if (route) { //if exists
+    if (route) {
+
+        //TODO: Validate and collect params from routes
+        const routeElements = request.url.match(route.path)
+        console.log(routeElements)
+
+        const routeParams = { ...routeElements.groups }
+        console.log(routeParams)
+
+        request.params = routeParams
+
         route.handler(request, response)
     } else {
         //Route | Resource Not Found
