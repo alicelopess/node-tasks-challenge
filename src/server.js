@@ -15,8 +15,7 @@ const server = http.createServer(async (request, response) => {
         buffers.push(chunk)
     }
 
-    console.log(buffers) //test
-    console.log(request.body) //test
+    //console.log(buffers) //test
 
     try {
         request.body = JSON.parse(Buffer.concat(buffers).toString())
