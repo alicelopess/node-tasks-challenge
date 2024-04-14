@@ -79,4 +79,22 @@ export const routes = [
                 .end('Task Updated!')
         }
     },
+    {
+        method: 'PATCH',
+        path: buildRoutePath('/tasks/:id'),
+        handler: (request, response) => {
+            
+            //TODO: Get Path ID (route param)
+            const { id } = request.params
+            console.log(`id: ${id}`)
+
+            database.updateTaskStatus('tasks', id, {
+                completed_at: new Date()
+            })
+
+            return response
+                .writeHead(204)
+                .end('Task Updated!')
+        }
+    },
 ]

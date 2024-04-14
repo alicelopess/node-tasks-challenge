@@ -59,13 +59,26 @@ export class Database {
         }
     }
     
-    //TODO: Create method that remove data from database
+    //TODO: Create method that update data
     update(table, id, taskUpdatedData) {
         const taskIndex = this.#database[table].findIndex((task) => task.id == id)
 
         if (taskIndex > -1) { //if task exists
             const { completed_at, created_at } = this.#database[table][taskIndex]
             this.#database[table][taskIndex] = { id, completed_at, created_at, ...taskUpdatedData }
+            this.#persistDatabase()
+        }
+    }
+
+    //TODO: Create method that update completed_at data 
+    updateTaskStatus(table, id, taskUpdatedStatus) {
+        const taskIndex = this.#database[table].findIndex((task) => task.id == id)
+        
+        console.log(taskUpdatedStatus.completed_at) //test
+        console.log(this.#database[table][taskIndex].completed_at ? this.#database[table][taskIndex].completed_at : 'null') //test
+
+        if (taskIndex > -1) { //if task exists
+            this.#database[table][taskIndex].completed_at ? this.#database[table][taskIndex].completed_at = null : this.#database[table][taskIndex].completed_at = taskUpdatedStatus.completed_at
             this.#persistDatabase()
         }
     }
