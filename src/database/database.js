@@ -1,4 +1,5 @@
 import fs from 'node:fs/promises'
+import { CLIENT_RENEG_LIMIT } from 'node:tls'
 
 const databasePath = new URL('../db.json', import.meta.url)
 
@@ -32,8 +33,23 @@ export class Database {
         return data
     }
 
-    select(table) {
-        const data = this.#database[table] ?? []
+    select(table, search) {
+        let data = this.#database[table] ?? []
+        
+        console.log(`Database Search: `, search)
+
+        //Search exists
+        if(search) {
+            const searchFilterValidOptions = Object.entries(search).filter(([_, value]) => value?.length > 0)
+            
+            return data.filter(task => searchFilterValidOptions.every(
+                ([filterKey, filterValue]) => 
+                    String(task[filterKey])
+                        .toLocaleLowerCase()
+                        .includes(String(filterValue).toLocaleLowerCase())
+            ))
+        }
+
         return data
     }
 

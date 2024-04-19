@@ -9,7 +9,22 @@ export const routes = [
         method: 'GET',
         path: buildRoutePath('/tasks'),
         handler: (request, response) => {
-            const tasks = database.select('tasks')
+            const { ...search } = request.query
+            let emptySearch = false
+            function isEmptySearch(search) {
+                return Object.keys(search).length === 0 && search.constructor === Object
+            }
+
+            console.log(`Routes Search:`, search)
+            if (isEmptySearch(search)) {
+                console.log(`Search is empty?`, isEmptySearch(search))
+                emptySearch = true
+            }
+
+            const tasks = database.select('tasks', emptySearch ? null : {
+                title: search.title,
+                description: search.description,
+            })
 
             return response
                 .setHeader('content-type', 'application/json')
